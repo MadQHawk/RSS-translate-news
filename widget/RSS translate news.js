@@ -189,7 +189,7 @@ if (mainResponse === 1) {
       if (RSSlinkResponse === -1) {
         isCancelled = true
       } else {
-        textFontColor = RSSlinkAlert.textFieldValue(0)
+        RSSlink = RSSlinkAlert.textFieldValue(0)
         Keychain.set("RSSlink", RSSlink)
         settingsChanged = true
       }
