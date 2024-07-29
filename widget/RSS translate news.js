@@ -11,7 +11,7 @@ let titleFontColor = Keychain.contains("titleFontColor") ? Keychain.get("titleFo
 let nightTitleFontColor = Keychain.contains("nightTitleFontColor") ? Keychain.get("nightTitleFontColor") : "ffffff"
 let textFontColor = Keychain.contains("textFontColor") ? Keychain.get("textFontColor") : "000000"
 let nightTextFontColor = Keychain.contains("nightTextFontColor") ? Keychain.get("nightTextFontColor") : "ffffff"
-let RSSlink = Keychain.contains("RSSlink") ? Keychain.get("RSSlink") : "https://rsshub.app/apnews/topics/apf-topnews?format=json"
+let newsRSSlink = Keychain.contains("newsRSSlink") ? Keychain.get("newsRSSlink") : "https://rsshub.app/apnews/topics/apf-topnews?format=json"
 let newsCount = 6
 let widgetTitle = Keychain.contains("widgetTitle") ? Keychain.get("widgetTitle") : "Latest News"
 let translationEnabled = Keychain.contains("translationEnabled") ? Keychain.get("translationEnabled") === "true" : false
@@ -182,15 +182,15 @@ if (mainResponse === 1) {
       let RSSlinkAlert = new Alert()
       RSSlinkAlert.message = "输入Json格式的订阅链接，链接推荐从rsshub获取"
       RSSlinkAlert.title = "RSS链接"
-      RSSlinkAlert.addTextField("Json格式", RSSlink)
+      RSSlinkAlert.addTextField("Json格式", newsRSSlink)
       RSSlinkAlert.addAction("确定")
       RSSlinkAlert.addCancelAction("取消")
       let RSSlinkResponse = await RSSlinkAlert.presentAlert()
       if (RSSlinkResponse === -1) {
         isCancelled = true
       } else {
-        RSSlink = RSSlinkAlert.textFieldValue(0)
-        Keychain.set("RSSlink", RSSlink)
+        newsRSSlink = RSSlinkAlert.textFieldValue(0)
+        Keychain.set("newsRSSlink", newsRSSlink)
         settingsChanged = true
       }
     }
@@ -275,7 +275,7 @@ async function createWidget(items) {
 }
 
 async function loadItems() {
-  let url = RSSlink
+  let url = newsRSSlink
   let req = new Request(url)
   let json = await req.loadJSON()
   return json.items
