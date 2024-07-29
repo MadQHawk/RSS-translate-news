@@ -1,6 +1,4 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: orange; icon-glyph: magic;
+
 // 本人是一名初学者，该代码为自行编写加chatgpt修改，整体比较潦草( ´▽｀)
 
 // 默认设置
