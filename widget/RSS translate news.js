@@ -1,5 +1,5 @@
-
 // 本人是一名初学者，该代码为自行编写加chatgpt修改，整体比较潦草( ´▽｀)
+// 我的GitHub地址，https://github.com/MadQHawk，查找后续更新
 
 // 默认设置
 let previewSize = Keychain.contains("previewSize") ? Keychain.get("previewSize") : "Medium"
