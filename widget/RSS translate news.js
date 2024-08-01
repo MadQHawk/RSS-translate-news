@@ -167,10 +167,10 @@ if (mainResponse === 1) {
       } else {
         titleFontColor = ColorAlert.textFieldValue(0)
         nightTitleFontColor = ColorAlert.textFieldValue(1)
+        textFontColor = ColorAlert.textFieldValue(2)
+        nightTextFontColor = ColorAlert.textFieldValue(3)
         Keychain.set("titleFontColor", titleFontColor)
         Keychain.set("nightTitleFontColor", nightTitleFontColor)
-        textFontColor = ColorAlert.textFieldValue(3)
-        nightTextFontColor = ColorAlert.textFieldValue(4)
         Keychain.set("textFontColor", textFontColor)
         Keychain.set("nightTextFontColor", nightTextFontColor)
         settingsChanged = true
