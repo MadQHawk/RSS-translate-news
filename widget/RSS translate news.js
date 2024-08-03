@@ -41,6 +41,7 @@ async function translateText(text, targetLang) {
   return res.data.translations[0].translatedText
 }
 
+if (config.runsInApp) {
 // 主菜单
 let mainAlert = new Alert()
 mainAlert.title = "主菜单"
@@ -228,11 +229,11 @@ if (mainResponse === 1) {
         translationEnabled = false
         Keychain.set("translationEnabled", "false")
         settingsChanged = true
+        }
       }
     }
   }
 }
-
 let items = await loadItems()
 items = items.slice(0, newsCount)
 
