@@ -263,7 +263,6 @@ async function createWidget(items) {
     let newsElement = widget.addText(`${i + 1}. ${title}`)
     newsElement.font = Font.systemFont(textFontSize)
     newsElement.textColor = new Color(isDarkMode ? `#${nightTextFontColor}` : `#${textFontColor}`)
-    newsElement.minimumScaleFactor = 0.75
     newsElement.url = item.url
 
     if (i < items.length - 1) {
@@ -279,11 +278,6 @@ async function loadItems() {
   let req = new Request(url)
   let json = await req.loadJSON()
   return json.items
-}
-
-function decode(text) {
-  let parser = new HTMLParser()
-  return parser.htmlDecode(text)
 }
 
 function decode(str) {
