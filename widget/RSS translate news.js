@@ -1,21 +1,38 @@
 // 本人是一名初学者，该代码为自行编写加chatgpt修改，整体比较潦草( ´▽｀)
-// 我的GitHub地址，https://github.com/MadQHawk，查找后续更新
 
 // 默认设置
-let previewSize = Keychain.contains("previewSize") ? Keychain.get("previewSize") : "Medium"
-let backgroundColor = Keychain.contains("backgroundColor") ? Keychain.get("backgroundColor") : "ffffff"
-let nightBackgroundColor = Keychain.contains("nightBackgroundColor") ? Keychain.get("nightBackgroundColor") : "000000"
-let titleFontSize = Keychain.contains("titleFontSize") ? parseInt(Keychain.get("titleFontSize")) : 12
-let textFontSize = Keychain.contains("textFontSize") ? parseInt(Keychain.get("textFontSize")) : 12
-let titleFontColor = Keychain.contains("titleFontColor") ? Keychain.get("titleFontColor") : "000000"
-let nightTitleFontColor = Keychain.contains("nightTitleFontColor") ? Keychain.get("nightTitleFontColor") : "ffffff"
-let textFontColor = Keychain.contains("textFontColor") ? Keychain.get("textFontColor") : "000000"
-let nightTextFontColor = Keychain.contains("nightTextFontColor") ? Keychain.get("nightTextFontColor") : "ffffff"
-let newsRSSlink = Keychain.contains("newsRSSlink") ? Keychain.get("newsRSSlink") : "https://rsshub.app/apnews/topics/apf-topnews?format=json"
-let newsCount = 6
-let widgetTitle = Keychain.contains("widgetTitle") ? Keychain.get("widgetTitle") : "Latest News"
-let translationEnabled = Keychain.contains("translationEnabled") ? Keychain.get("translationEnabled") === "true" : false
-let translationApiKey = Keychain.contains("translationApiKey") ? Keychain.get("translationApiKey") : ""
+const defaultSettings = {
+  previewSize: "Large",
+  backgroundColor: "ffffff", 
+  nightBackgroundColor: "020202", 
+  titleFontSize: "18", 
+  textFontSize: "16", 
+  titleFontColor: "000000", 
+  nightTitleFontColor: "ffffff", 
+  textFontColor: "000000", 
+  nightTextFontColor: "ffffff", 
+  newsRSSlink: "https://rsshub.app/apnews/topics/apf-topnews?format=json", 
+  newsCount: 5, 
+  widgetTitle: "news",
+  translationEnabled: false, 
+  translationApiKey: ""
+};
+
+// 将设置储存在keychain
+let scriptName = Script.name();
+let storedSettings;
+try {
+  let storedSettingsString = Keychain.get(scriptName);
+  storedSettings = storedSettingsString ? JSON.parse(storedSettingsString) : defaultSettings;
+  } catch {
+    
+    storedSettings = defaultSettings;
+  }
+
+// 访问存储的设置
+let {
+  previewSize, backgroundColor, nightBackgroundColor, titleFontSize, textFontSize, titleFontColor, nightTitleFontColor, textFontColor, nightTextFontColor, newsRSSlink, newsCount,widgetTitle,translationEnabled, translationApiKey
+} = storedSettings;
 
 // 小组件预览
 let previewOptions = ["Small", "Medium", "Large"]
@@ -65,7 +82,8 @@ if (mainResponse === 0) {
   let previewResponse = await previewAlert.presentSheet()
   if (previewResponse !== -1) {
     previewSize = previewOptions[previewResponse]
-    Keychain.set("previewSize", previewSize)
+    storedSettings.previewSize = previewSize;
+    Keychain.set(scriptName, JSON.stringify(storedSettings));
   }
 }
 
@@ -104,7 +122,8 @@ if (mainResponse === 1) {
         isCancelled = true
       } else {
         widgetTitle = titleAlert.textFieldValue(0)
-        Keychain.set("widgetTitle", widgetTitle)
+        storedSettings.widgetTitle = widgetTitle;
+        Keychain.set(scriptName, JSON.stringify(storedSettings));
         settingsChanged = true
       }
     }
@@ -124,8 +143,9 @@ if (mainResponse === 1) {
       } else {
         backgroundColor = bgAlert.textFieldValue(0)
         nightBackgroundColor = bgAlert.textFieldValue(1)
-        Keychain.set("backgroundColor", backgroundColor)
-        Keychain.set("nightBackgroundColor", nightBackgroundColor)
+        storedSettings.backgroundColor = backgroundColor;
+        storedSettings.nightBackgroundColor = nightBackgroundColor;
+        Keychain.set(scriptName, JSON.stringify(storedSettings));
         settingsChanged = true
       }
     }
@@ -135,18 +155,19 @@ if (mainResponse === 1) {
       let SizeAlert = new Alert()
       SizeAlert.title = "文字大小"
       SizeAlert.message = "第一项为标题大小\n第二项为正文大小"
-      SizeAlert.addTextField("Title Font Size", String(titleFontSize))
-      SizeAlert.addTextField("Title Font Size", String(textFontSize))
+      SizeAlert.addTextField("Title Font Size", titleFontSize)
+      SizeAlert.addTextField("Title Font Size", textFontSize)
       SizeAlert.addAction("确定")
       SizeAlert.addCancelAction("取消")
       let SizeResponse = await SizeAlert.presentAlert()
       if (SizeResponse === -1) {
         isCancelled = true
       } else {
-        titleFontSize = parseInt(SizeAlert.textFieldValue(0))
-        textFontSize = parseInt(SizeAlert.textFieldValue(1))
-        Keychain.set("titleFontSize", String(titleFontSize))
-        Keychain.set("textFontSize", String(textFontSize))
+        titleFontSize = SizeAlert.textFieldValue(0)
+        textFontSize = SizeAlert.textFieldValue(1)
+        storedSettings.titleFontSize = titleFontSize;
+        storedSettings.textFontSize = textFontSize;
+        Keychain.set(scriptName, JSON.stringify(storedSettings));
         settingsChanged = true
       }
     }
@@ -170,10 +191,11 @@ if (mainResponse === 1) {
         nightTitleFontColor = ColorAlert.textFieldValue(1)
         textFontColor = ColorAlert.textFieldValue(2)
         nightTextFontColor = ColorAlert.textFieldValue(3)
-        Keychain.set("titleFontColor", titleFontColor)
-        Keychain.set("nightTitleFontColor", nightTitleFontColor)
-        Keychain.set("textFontColor", textFontColor)
-        Keychain.set("nightTextFontColor", nightTextFontColor)
+        storedSettings.titleFontColor = titleFontColor;
+        storedSettings.nightTitleFontColor = nightTitleFontColor;
+        storedSettings.textFontColor = textFontColor;
+        storedSettings.nightTextFontColor = nightTextFontColor;
+        Keychain.set(scriptName, JSON.stringify(storedSettings));
         settingsChanged = true
       }
     }
@@ -191,7 +213,8 @@ if (mainResponse === 1) {
         isCancelled = true
       } else {
         newsRSSlink = RSSlinkAlert.textFieldValue(0)
-        Keychain.set("newsRSSlink", newsRSSlink)
+        storedSettings.newsRSSlink = newsRSSlink;
+        Keychain.set(scriptName, JSON.stringify(storedSettings));
         settingsChanged = true
       }
     }
@@ -219,21 +242,24 @@ if (mainResponse === 1) {
           translationApiKey = enableTranslationAlert.textFieldValue(
 
 0)
-          Keychain.set("translationApiKey", translationApiKey)
+          storedSettings.translationApiKey = translationApiKey;
           translationEnabled = true
-          Keychain.set("translationEnabled", "true")
+          storedSettings.translationEnabled = true;
+          Keychain.set(scriptName, JSON.stringify(storedSettings));
           settingsChanged = true
         }
       } else if (translationResponse === 1) {
         // 禁用翻译
-        translationEnabled = false
-        Keychain.set("translationEnabled", "false")
+          translationEnabled = false;
+          storedSettings.translationEnabled = false;
+          Keychain.set(scriptName, JSON.stringify(storedSettings));
         settingsChanged = true
-        }
       }
     }
   }
+ }
 }
+
 let items = await loadItems()
 items = items.slice(0, newsCount)
 
@@ -241,8 +267,6 @@ items = items.slice(0, newsCount)
 for (let i = 0; i < items.length; i++) {
   items[i].title = await translateText(items[i].title, "zh")
 }
-
-Script.complete()
 
 async function createWidget(items) {
   let widget = new ListWidget()
@@ -253,7 +277,7 @@ async function createWidget(items) {
 
   // 添加自定义标题
   let titleElement = widget.addText(widgetTitle)
-  titleElement.font = Font.boldSystemFont(titleFontSize)
+  titleElement.font = Font.boldSystemFont(Number(titleFontSize))
   titleElement.textColor = new Color(isDarkMode ? `#${nightTitleFontColor}` : `#${titleFontColor}`)
   titleElement.leftAlignText()
   widget.addSpacer(10)
@@ -262,17 +286,15 @@ async function createWidget(items) {
     let item = items[i]
     let title = decode(item.title)
     let newsElement = widget.addText(`${i + 1}. ${title}`)
-    newsElement.font = Font.systemFont(textFontSize)
+    newsElement.font = Font.systemFont(Number(textFontSize))
     newsElement.textColor = new Color(isDarkMode ? `#${nightTextFontColor}` : `#${textFontColor}`)
     newsElement.url = item.url
-
-    if (i < items.length - 1) {
       widget.addSpacer(8)
-    }
   }
 
-  return widget
-}
+    return widget
+  }
+
 
 async function loadItems() {
   let url = newsRSSlink
@@ -301,4 +323,5 @@ if (config.runsInWidget) {
   } else {
     widget.presentLarge()
   }
-}
+  return
+ }
