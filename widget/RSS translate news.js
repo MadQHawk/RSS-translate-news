@@ -11,7 +11,7 @@ const defaultSettings = {
   nightTitleFontColor: "ffffff", 
   textFontColor: "000000", 
   nightTextFontColor: "ffffff", 
-  newsRSSlink: "https://rsshub.app/apnews/topics/apf-topnews?format=json", 
+  newsRSSlink: "https://rsshub.app/apnews/topics/apf-topnews", 
   newsCount: 5, 
   widgetTitle: "news",
   translationEnabled: false, 
@@ -288,7 +288,7 @@ async function createWidget(items) {
     let newsElement = widget.addText(`${i + 1}. ${title}`)
     newsElement.font = Font.systemFont(Number(textFontSize))
     newsElement.textColor = new Color(isDarkMode ? `#${nightTextFontColor}` : `#${textFontColor}`)
-    newsElement.url = item.url
+    newsElement.url = item.url;
       widget.addSpacer(8)
   }
 
@@ -297,7 +297,7 @@ async function createWidget(items) {
 
 
 async function loadItems() {
-  let url = newsRSSlink
+  let url = "https://api.rss2json.com/v1/api.json?rss_url=" + storedSettings.newsRSSlink;
   let req = new Request(url)
   let json = await req.loadJSON()
   return json.items
